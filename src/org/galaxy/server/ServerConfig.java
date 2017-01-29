@@ -7,14 +7,23 @@ package org.galaxy.server;
  */
 public class ServerConfig {
 
-    private static final int MIN = 10;
+    private static final int MIN = 1;
 
     private static final int MAX = 500;
 
-    private String localAddress = "x.x.x.x";
+    /**
+     * 本地地址
+     */
+    private String localAddress = "";
 
+    /**
+     * 本地端口号
+     */
     private int port = 9999;
 
+    /**
+     * 最大连接数
+     */
     private int connectionMaximum = MIN;
 
     public String getLocalAddress() {

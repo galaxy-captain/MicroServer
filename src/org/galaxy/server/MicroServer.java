@@ -1,7 +1,6 @@
 package org.galaxy.server;
 
 import org.galaxy.server.listener.ConnectionListener;
-import org.galaxy.server.utils.L;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -15,16 +14,27 @@ import java.util.Map;
  * <p>
  * 微服务器基础类
  */
-public class MicroServer {
+public final class MicroServer {
 
+    /**
+     * 服务器实例
+     */
     private ServerSocket mServer;
 
+    /**
+     * 服务器配置
+     */
     private ServerConfig mConfig;
 
+    /**
+     * 服务器状态
+     */
     private ServerState mState;
 
     /**
-     * -----------------------------------------------------------------------------------------------
+     * -------------------------------------------------------------------------------------
+     *                                       服务器回调
+     * -------------------------------------------------------------------------------------
      **/
 
     private ConnectionListener mListener;
@@ -93,7 +103,7 @@ public class MicroServer {
             }
 
             // 服务器已经关闭
-            // L.error("WaitThread stopped that server has been closed...");
+            // SLog.error("WaitThread stopped that server has been closed...");
 
         }
 
@@ -115,7 +125,7 @@ public class MicroServer {
 
         try {
 
-            L.error("Server initialize starting...");
+            SLog.error("Server initialize starting...");
 
             // 初始化ServerSocket服务
             mServer = new ServerSocket(mConfig.getPort());
@@ -126,13 +136,13 @@ public class MicroServer {
             // 设置服务器状态
             mState.setRunning(true);
 
-            L.error("Server initialize success...");
+            SLog.error("Server initialize success...");
 
         } catch (IOException e) {
 
             onError(e);
 
-            L.error("Server initialize failed...");
+            SLog.error("Server initialize failed...");
 
             return false;
         }
@@ -162,7 +172,7 @@ public class MicroServer {
 
         try {
 
-            L.error("Waiting for client connect...");
+            SLog.error("Waiting for client connect...");
 
             // 等待客户端连接
             Socket socket = mServer.accept();
@@ -180,17 +190,17 @@ public class MicroServer {
                 // 保存客户端连接
                 new MicroConnection(MicroServer.this, socket).run();
 
-                L.error("new client[" + name + "(" + ip + ":" + port + ")" + "] connect success...");
+                SLog.error("new client[" + name + "(" + ip + ":" + port + ")" + "] connect success...");
 
             } else {
-                L.error("new client error...");
+                SLog.error("new client error...");
             }
 
         } catch (IOException e) {
 
             onError(e);
 
-            L.error("Wait for connect stopped that Server has been closed...");
+            SLog.error("Wait for connect stopped that Server has been closed...");
         }
 
     }
@@ -200,7 +210,7 @@ public class MicroServer {
      */
     public void closeServer() {
 
-        L.error("Server is closing...");
+        SLog.error("Server is closing...");
 
         try {
 
@@ -219,7 +229,7 @@ public class MicroServer {
         mState = null;
         mConfig = null;
 
-        L.error("Server has closed...");
+        SLog.error("Server has closed...");
 
     }
 

@@ -8,15 +8,29 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by OoO on 2017/1/21.
+ *
+ * 服务器运行时状态
  */
 public class ServerState {
 
+    /**
+     * 服务器
+     */
     private MicroServer mServer;
 
+    /**
+     * 运行状态
+     */
     private boolean isRunning = false;
 
+    /**
+     * 总连接数
+     */
     private int connectionTotal = 0;
 
+    /**
+     * 连接集合
+     */
     private ConcurrentHashMap<String, MicroConnection> connectionMap = new ConcurrentHashMap<>();
 
     public ServerState(MicroServer server) {

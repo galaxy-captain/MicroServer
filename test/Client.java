@@ -1,3 +1,5 @@
+import org.galaxy.server.utils.L;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -8,28 +10,45 @@ import java.util.Scanner;
  */
 public class Client {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws InterruptedException {
 
         Client client = new Client();
 
         client.connect();
+
     }
 
-    public void connect() throws IOException {
+    public void connect() throws InterruptedException {
 
-        Socket socket = new Socket("127.0.0.1", 9999);
+        try {
 
-        OutputStream stream = socket.getOutputStream();
+            L.error("开始连接服务器...");
 
-        Scanner scanner = new Scanner(System.in);
+            Socket socket = new Socket("192.168.56.101", 9999);
 
-        while (true) {
+            OutputStream stream = socket.getOutputStream();
 
-            String next = scanner.next();
+            Scanner scanner = new Scanner(System.in);
 
-            stream.write(next.getBytes());
+            L.error("连接成功...");
 
-            stream.flush();
+            while (true) {
+
+                String next = scanner.next();
+
+                stream.write(next.getBytes());
+
+                stream.flush();
+
+            }
+
+        } catch (IOException e) {
+
+            L.error("连接失败...");
+
+            Thread.sleep(500);
+
+            connect();
 
         }
 

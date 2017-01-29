@@ -1,6 +1,5 @@
 package org.galaxy.server;
 
-import org.galaxy.server.utils.L;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -97,7 +96,7 @@ public final class MicroConnection {
 
             }
 
-            L.error("client[" + getName() + "] end...");
+            SLog.error("client[" + getName() + "] end...");
 
         } catch (IOException e) {
             onConnectError(e);
@@ -110,15 +109,9 @@ public final class MicroConnection {
      */
     private void onReceive(byte[] buffer, int length) {
 
-//        String data = new String(buffer, 0, length,"GBK");
-//
-//        L.error("client[" + getName() + "] receive message -> " + data);
-//
-        for (int i = 0; i < length; i++) {
-            System.out.print(buffer[i] + " ");
-        }
+        String data = new String(buffer, 0, length);
 
-        System.out.println();
+        SLog.error("client[" + getName() + "] receive message -> " + data);
 
         if (mServer != null) mServer.onConnectionReceive(this, buffer, length);
     }
@@ -186,7 +179,7 @@ public final class MicroConnection {
                         try {
                             sleep(1000);
                         } catch (InterruptedException e) {
-                            L.error("thread sleep error...");
+                            SLog.error("thread sleep error...");
                         }
 
                     }
@@ -201,8 +194,9 @@ public final class MicroConnection {
 
     }
 
-    @Deprecated
     public boolean testConnection() {
+
+        if (mSocket == null) return false;
 
         try {
 
@@ -213,9 +207,6 @@ public final class MicroConnection {
             }
 
         } catch (IOException e) {
-
-            e.printStackTrace();
-
             return false;
         }
 
@@ -226,9 +217,6 @@ public final class MicroConnection {
      * 连接异常时处理
      */
     private void onConnectError(IOException e) {
-
-//        e.printStackTrace();
-
         close();
     }
 
@@ -242,13 +230,13 @@ public final class MicroConnection {
 
             mSocket.close();
 
-        } catch (IOException e) {
-//            e.printStackTrace();
+        } catch (IOException ignored) {
+            // ignored exception
         }
 
         mServer.onConnectionClose(this);
 
-        L.error("client[" + getName() + "] connection closed...");
+        SLog.error("client[" + getName() + "] connection closed...");
     }
 
     /**
@@ -258,11 +246,6 @@ public final class MicroConnection {
         return isConnect
                 && mServer.getState() != null && mServer.getState().isRunning()
                 && mSocket != null && mSocket.isConnected();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
     }
 
 }

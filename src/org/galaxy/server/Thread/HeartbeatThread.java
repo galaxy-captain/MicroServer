@@ -1,4 +1,7 @@
-package org.galaxy.server;
+package org.galaxy.server.Thread;
+
+import org.galaxy.server.MicroConnection;
+import org.galaxy.server.MicroServer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +9,9 @@ import java.util.List;
 /**
  * Created by galaxy on 2017/1/23.
  *
+ * 心跳线程
  */
-final class HeartbeatThread extends Thread {
+public final class HeartbeatThread extends Thread {
 
     private MicroServer mServer;
 
