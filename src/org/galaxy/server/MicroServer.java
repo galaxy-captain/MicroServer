@@ -1,5 +1,6 @@
 package org.galaxy.server;
 
+import org.galaxy.server.impl.IServer;
 import org.galaxy.server.listener.ConnectionListener;
 import org.galaxy.server.listener.ServerListener;
 
@@ -15,7 +16,7 @@ import java.util.Map;
  * <p>
  * 微服务器基础类
  */
-public final class MicroServer {
+public final class MicroServer implements IServer{
 
     /**
      * 服务器实例

@@ -1,6 +1,8 @@
 package org.galaxy.server;
 
 
+import org.galaxy.server.impl.IConnection;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,7 +13,7 @@ import java.net.Socket;
  * <p>
  * 客户端连接类
  */
-public final class MicroConnection {
+public final class MicroConnection implements IConnection{
 
     private final MicroServer mServer;
 
@@ -27,6 +29,9 @@ public final class MicroConnection {
 
     private boolean isSending = false;
 
+    /**
+     * 监听在其他线程进行
+     */
     private final Thread listenStreamThread = new Thread() {
 
         @Override
