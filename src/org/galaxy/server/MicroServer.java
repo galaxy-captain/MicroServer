@@ -1,6 +1,7 @@
 package org.galaxy.server;
 
 import org.galaxy.server.listener.ConnectionListener;
+import org.galaxy.server.listener.ServerListener;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -33,18 +34,45 @@ public final class MicroServer {
 
     /**
      * -------------------------------------------------------------------------------------
-     *                                       服务器回调
+     * 服务器回调
      * -------------------------------------------------------------------------------------
      **/
 
-    private ConnectionListener mListener;
+    private ServerListener mServerListener;
+
+    public void setServerListener(ServerListener serverListener) {
+        this.mServerListener = serverListener;
+    }
+
+    public void removeServerListener(ServerListener serverListener) {
+        this.mServerListener = null;
+    }
+
+    void onServerCreate() {
+        if (mServerListener != null) mServerListener.onCreate(getConfig(), getState());
+    }
+
+    void onServerStart() {
+        if (mServerListener != null) mServerListener.onStart(getConfig(), getState());
+    }
+
+    void onServerClose() {
+        if (mServerListener != null) mServerListener.onClose(getConfig(), getState());
+    }
+
+    void onServerAccept(MicroConnection connection) {
+        if (mServerListener != null) mServerListener.onAccept(connection);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    private ConnectionListener mConnectionListener;
 
     public void setConnectionListener(ConnectionListener listener) {
-        this.mListener = listener;
+        this.mConnectionListener = listener;
     }
 
     public void removeConnectionListener(ConnectionListener listener) {
-        mListener = null;
+        mConnectionListener = null;
     }
 
     /**
@@ -54,7 +82,7 @@ public final class MicroServer {
 
         addConnection(connection);
 
-        if (mListener != null) mListener.onAccept(connection);
+        if (mConnectionListener != null) mConnectionListener.onAccept(connection);
     }
 
     /**
@@ -64,21 +92,21 @@ public final class MicroServer {
 
         removeConnection(connection);
 
-        if (mListener != null) mListener.onClose(connection);
+        if (mConnectionListener != null) mConnectionListener.onClose(connection);
     }
 
     /**
      * 回调 --- 连接发送消息
      */
     void onConnectionSend(MicroConnection connection, byte[] buffer) {
-        if (mListener != null) mListener.onSend(connection, buffer);
+        if (mConnectionListener != null) mConnectionListener.onSend(connection, buffer);
     }
 
     /**
      * 回调 --- 连接接收消息
      */
     void onConnectionReceive(MicroConnection connection, byte[] buffer, int length) {
-        if (mListener != null) mListener.onReceive(connection, buffer, length);
+        if (mConnectionListener != null) mConnectionListener.onReceive(connection, buffer, length);
     }
 
     /** ----------------------------------------------------------------------------------------------- **/
@@ -145,6 +173,11 @@ public final class MicroServer {
             SLog.error("Server initialize failed...");
 
             return false;
+
+        } finally {
+
+            // 服务器回调
+            onServerCreate();
         }
 
         return true;
@@ -155,13 +188,21 @@ public final class MicroServer {
      * 启动服务器
      */
     public void startServer() {
-        waitForConnectAtThread();
+
+        try {
+
+            waitForConnectAtThread();
+        } finally {
+            // 服务器启动回调
+            onServerStart();
+        }
+
     }
 
     /**
      * 打开等待客户端连接的线程
      */
-    public void waitForConnectAtThread() {
+    private void waitForConnectAtThread() {
         waitForConnectTread.start();
     }
 
@@ -188,9 +229,14 @@ public final class MicroServer {
                 int port = socket.getPort();
 
                 // 保存客户端连接
-                new MicroConnection(MicroServer.this, socket).run();
+                final MicroConnection newConnection = new MicroConnection(MicroServer.this, socket);
+
+                newConnection.run();
 
                 SLog.error("new client[" + name + "(" + ip + ":" + port + ")" + "] connect success...");
+
+                // 服务器回调
+                onServerAccept(newConnection);
 
             } else {
                 SLog.error("new client error...");
@@ -230,6 +276,9 @@ public final class MicroServer {
         mConfig = null;
 
         SLog.error("Server has closed...");
+
+        // 服务器关闭回调
+        onServerClose();
 
     }
 

@@ -69,6 +69,20 @@ public final class MicroConnection {
     }
 
     /**
+     * 客户端地址
+     */
+    public String getIp() {
+        return ip;
+    }
+
+    /**
+     * 客户端端口号
+     */
+    public int getPort() {
+        return port;
+    }
+
+    /**
      * 启动输入流监听线程
      */
     private void listenStreamAtThread() {
