@@ -16,7 +16,7 @@ import java.util.Map;
  * <p>
  * 微服务器基础类
  */
-public final class MicroServer implements IServer{
+public final class MicroServer implements IServer {
 
     /**
      * 服务器实例
@@ -32,6 +32,26 @@ public final class MicroServer implements IServer{
      * 服务器状态
      */
     private ServerState mState;
+
+    @Override
+    public final boolean create() {
+        return false;
+    }
+
+    @Override
+    public final boolean start() {
+        return false;
+    }
+
+    @Override
+    public final boolean stop() {
+        return false;
+    }
+
+    @Override
+    public final boolean close() {
+        return false;
+    }
 
     /**
      * -------------------------------------------------------------------------------------
@@ -230,14 +250,9 @@ public final class MicroServer implements IServer{
                 int port = socket.getPort();
 
                 // 保存客户端连接
-                final MicroConnection newConnection = new MicroConnection(MicroServer.this, socket);
-
-                newConnection.run();
+                new MicroConnection(MicroServer.this, socket).run();
 
                 SLog.error("new client[" + name + "(" + ip + ":" + port + ")" + "] connect success...");
-
-                // 服务器回调
-                onServerAccept(newConnection);
 
             } else {
                 SLog.error("new client error...");

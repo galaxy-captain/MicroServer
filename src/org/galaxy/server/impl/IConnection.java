@@ -5,4 +5,11 @@ package org.galaxy.server.impl;
  */
 public interface IConnection {
 
+    boolean create();
+
+    boolean start();
+
+    boolean stop();
+
+    boolean close();
 }

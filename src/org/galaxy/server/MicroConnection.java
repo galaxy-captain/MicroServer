@@ -13,7 +13,7 @@ import java.net.Socket;
  * <p>
  * 客户端连接类
  */
-public final class MicroConnection implements IConnection{
+public final class MicroConnection implements IConnection {
 
     private final MicroServer mServer;
 
@@ -51,6 +51,7 @@ public final class MicroConnection implements IConnection{
 
         this.name = ip + ":" + port;
 
+        this.mServer.onServerAccept(this);
         this.mServer.onConnectionAccept(this);
 
     }
@@ -239,9 +240,25 @@ public final class MicroConnection implements IConnection{
         close();
     }
 
-    public void close() {
+    @Override
+    public boolean create() {
+        return false;
+    }
 
-        if (!isConnect) return;
+    @Override
+    public boolean start() {
+        return false;
+    }
+
+    @Override
+    public boolean stop() {
+        return false;
+    }
+
+    @Override
+    public boolean close() {
+
+        if (!isConnect) return false;
 
         isConnect = false;
 
@@ -251,11 +268,14 @@ public final class MicroConnection implements IConnection{
 
         } catch (IOException ignored) {
             // ignored exception
+            return false;
         }
 
         mServer.onConnectionClose(this);
 
         SLog.error("client[" + getName() + "] connection closed...");
+
+        return true;
     }
 
     /**
