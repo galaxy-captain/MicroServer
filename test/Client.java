@@ -1,5 +1,3 @@
-import org.galaxy.server.utils.L;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -8,7 +6,7 @@ import java.util.Scanner;
 /**
  * Created by galaxy on 2017/1/28.
  */
-public class Client {
+class Client {
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -22,7 +20,7 @@ public class Client {
 
         try {
 
-            L.error("开始连接服务器...");
+//            L.error("开始连接服务器...");
 
             Socket socket = new Socket("192.168.56.101", 9999);
 
@@ -30,7 +28,7 @@ public class Client {
 
             Scanner scanner = new Scanner(System.in);
 
-            L.error("连接成功...");
+//            L.error("连接成功...");
 
             while (true) {
 
@@ -44,7 +42,7 @@ public class Client {
 
         } catch (IOException e) {
 
-            L.error("连接失败...");
+//            L.error("连接失败...");
 
             Thread.sleep(500);
 
