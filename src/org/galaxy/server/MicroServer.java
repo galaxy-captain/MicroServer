@@ -13,10 +13,14 @@ import java.util.Map;
 /**
  * Created by OoO on 2017/1/21.
  * <p>
- * <p>
  * 微服务器基础类
  */
 public final class MicroServer implements IServer {
+
+    /**
+     * 默认服务器配置
+     */
+    private static final ServerConfig DEFAULT_CONFIG = new ServerConfig();
 
     /**
      * 服务器实例
@@ -160,7 +164,7 @@ public final class MicroServer implements IServer {
 
 
     public MicroServer() {
-        this(new ServerConfig());
+        this(DEFAULT_CONFIG);
     }
 
     public MicroServer(ServerConfig config) {

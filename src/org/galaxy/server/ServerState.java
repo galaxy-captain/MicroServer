@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by OoO on 2017/1/21.
- *
+ * <p>
  * 服务器运行时状态
  */
 public class ServerState {
@@ -45,6 +45,9 @@ public class ServerState {
         return mServer.getConfig().getPort();
     }
 
+    /**
+     * 运行状态
+     */
     public boolean isRunning() {
         return isRunning;
     }
@@ -53,6 +56,9 @@ public class ServerState {
         isRunning = running;
     }
 
+    /**
+     * 连接数量
+     */
     public int getConnectionTotal() {
         return connectionTotal;
     }
@@ -71,22 +77,37 @@ public class ServerState {
         return ++connectionTotal;
     }
 
+    /**
+     * 获取一个连接
+     */
     public MicroConnection getConnection(String name) {
         return connectionMap.get(name);
     }
 
+    /**
+     * 获取全部连接
+     */
     public Map<String, MicroConnection> getAllConnection() {
         return connectionMap;
     }
 
+    /**
+     * 获取全部连接的名字
+     */
     public List<String> getAllConnectionName() {
         return new ArrayList<>(connectionMap.keySet());
     }
 
+    /**
+     * 关闭一个连接
+     */
     public void closeConnection(MicroConnection connection) {
         connection.close();
     }
 
+    /**
+     * 关闭全部连接
+     */
     public void closeAllConnection() {
 
         Set<Map.Entry<String, MicroConnection>> set = connectionMap.entrySet();

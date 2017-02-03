@@ -13,7 +13,7 @@ import java.net.Socket;
  * <p>
  * 客户端连接类
  */
-public final class MicroConnection implements IConnection {
+final class MicroConnection implements IConnection {
 
     private final MicroServer mServer;
 
@@ -41,15 +41,16 @@ public final class MicroConnection implements IConnection {
 
     };
 
-    public MicroConnection(MicroServer server, Socket socket) {
+    MicroConnection(MicroServer server, Socket socket) {
 
         this.mServer = server;
         this.mSocket = socket;
 
+
         this.ip = socket.getInetAddress().getHostAddress();
         this.port = socket.getPort();
 
-        this.name = ip + ":" + port;
+        this.name = socket.getInetAddress().getHostName() + ":" + this.port;
 
         this.mServer.onServerAccept(this);
         this.mServer.onConnectionAccept(this);
