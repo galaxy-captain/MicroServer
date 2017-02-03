@@ -13,7 +13,7 @@ import java.net.Socket;
  * <p>
  * 客户端连接类
  */
-final class MicroConnection implements IConnection {
+public final class MicroConnection implements IConnection {
 
     private final MicroServer mServer;
 
